@@ -1,0 +1,99 @@
+DDL
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
+USE `mydb` ;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Pessoa`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`Pessoa` (
+  `cpf` INT NOT NULL COMMENT 'CPF(Cadastro de Pessoa Física) da pessoa, indicador único de pessoa na tabela\n',
+  `nome` VARCHAR(55) NOT NULL COMMENT 'Nome da pessoa\n',
+  `idade` INT NULL COMMENT 'Idade da pessoa\n',
+  `endereco` VARCHAR(100) NULL COMMENT 'Logradouro da pessoa\n',
+  `telefone` JSON NULL COMMENT 'Lista de telefones da pessoa',
+  `estado_moradia` VARCHAR(45) NULL COMMENT 'Estado de moradia atual da pessoa',
+  `bairro_moradia` VARCHAR(45) NULL COMMENT 'Bairro da moradia atual da pessoa\n',
+  PRIMARY KEY (`cpf`))
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Vacina`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`Vacina` (
+  `cod_vacina` VARCHAR(55) NOT NULL COMMENT 'Código da vacina',
+  `nome` VARCHAR(100) NOT NULL COMMENT 'nome da vacina',
+  `lote` VARCHAR(45) NOT NULL COMMENT 'Identificação do lote da vacina',
+  `doses_recomendadas` INT NOT NULL COMMENT 'Número de doses recomendadas da vacina',
+  `intervalo_doses` INT NOT NULL COMMENT 'Número que representa o intervalo de tempo em dias entre cada dose da vacina',
+  `fabricante` VARCHAR(100) NOT NULL COMMENT 'Nome do fabricante da vacina',
+  `registro_anvisa` VARCHAR(45) NOT NULL COMMENT 'Registro da vacina na anvisa\n',
+  `tipo` VARCHAR(45) NOT NULL COMMENT 'Tipo da vacina, exemplo: viral, bacteriana, toxóide',
+  `observacoes` MEDIUMTEXT NOT NULL COMMENT 'Observações sobre a vacina',
+  `validade` DATE NOT NULL COMMENT 'Data de validade da vacina',
+  PRIMARY KEY (`cod_vacina`))
+ENGINE = InnoDB
+COMMENT = 'Tabela que contém as registro da vacinas';
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Pessoa_tomou_Vacina`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`Pessoa_tomou_Vacina` (
+  `Pessoa_cpf` INT NOT NULL,
+  `Vacina_cod_vacina` VARCHAR(55) NOT NULL,
+  `dose` INT NOT NULL COMMENT 'Indica a dose da vacina que está sendo tomada, exemplo: 1, 2, 3. ou seja, primeira, segunda e terceira dose',
+  `data` DATE NOT NULL COMMENT 'Data em que a pessoa toumou a dose da vacina',
+  `estado_vacina` VARCHAR(45) NOT NULL COMMENT 'Estado onde vacinação foi realizada',
+  `bairro_vacina` VARCHAR(45) NOT NULL COMMENT 'Bairro onde a vacinação foi realizada',
+  `unidade` VARCHAR(80) NOT NULL COMMENT 'unidade na qual foi realizada a vacinação, inclusive unidades móveis',
+  PRIMARY KEY (`Pessoa_cpf`, `Vacina_cod_vacina`),
+  INDEX `fk_Pessoa_has_Vacina_Vacina1_idx` (`Vacina_cod_vacina` ASC) VISIBLE,
+  INDEX `fk_Pessoa_has_Vacina_Pessoa_idx` (`Pessoa_cpf` ASC) VISIBLE,
+  CONSTRAINT `fk_Pessoa_has_Vacina_Pessoa`
+    FOREIGN KEY (`Pessoa_cpf`)
+    REFERENCES `mydb`.`Pessoa` (`cpf`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Pessoa_has_Vacina_Vacina1`
+    FOREIGN KEY (`Vacina_cod_vacina`)
+    REFERENCES `mydb`.`Vacina` (`cod_vacina`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+Inserção de dados
+
+-- Inserindo dados na tabela Pessoa
+INSERT INTO `mydb`.`Pessoa` (`cpf`, `nome`, `idade`, `endereco`, `telefone`, `estado_moradia`, `bairro_moradia`)
+VALUES 
+(123456789, 'João Silva', 30, 'Rua das Flores, 123', '[{"telefone": "99999-0001"}]', 'Goiás', 'Centro'),
+(987654321, 'Maria Oliveira', 25, 'Avenida Brasil, 456', '[{"telefone": "99999-0002"}]', 'São Paulo', 'Jardins');
+
+-- Inserindo dados na tabela Vacina
+INSERT INTO `mydb`.`Vacina` (`cod_vacina`, `nome`, `lote`, `doses_recomendadas`, `intervalo_doses`, `fabricante`, `registro_anvisa`, `tipo`, `observacoes`, `validade`)
+VALUES 
+('VAC001', 'Covid-19 - Pfizer', 'L001', 2, 21, 'Pfizer', '123456789', 'Viral', 'Indicado para maiores de 12 anos', '2026-12-31'),
+('VAC002', 'Influenza - Butantan', 'L002', 1, 0, 'Instituto Butantan', '987654321', 'Viral', 'Proteção contra gripe sazonal', '2025-06-30');
+
+-- Inserindo dados na tabela Pessoa_tomou_Vacina
+INSERT INTO `mydb`.`Pessoa_tomou_Vacina` (`Pessoa_cpf`, `Vacina_cod_vacina`, `dose`, `data`, `estado_vacina`, `bairro_vacina`, `unidade`)
+VALUES 
+(123456789, 'VAC001', 1, '2024-01-15', 'Goiás', 'Centro', 'Posto Municipal de Saúde'),
+(987654321, 'VAC002', 1, '2024-03-10', 'São Paulo', 'Jardins', 'Clínica Popular');
+
