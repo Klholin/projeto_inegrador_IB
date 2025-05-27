@@ -19,7 +19,7 @@ USE `mydb` ;
 -- Table `mydb`.`Pessoa`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Pessoa` (
-  `cpf` INT NOT NULL COMMENT 'CPF(Cadastro de Pessoa Física) da pessoa, indicador único de pessoa na tabela\n',
+  `cpf` CHAR(11) NOT NULL COMMENT 'CPF(Cadastro de Pessoa Física) da pessoa, indicador único de pessoa na tabela\n',
   `nome` VARCHAR(55) NOT NULL COMMENT 'Nome da pessoa\n',
   `idade` INT NULL COMMENT 'Idade da pessoa\n',
   `endereco` VARCHAR(100) NULL COMMENT 'Logradouro da pessoa\n',
@@ -51,7 +51,7 @@ COMMENT = 'Tabela que contém as registro da vacinas';
 -- Table `mydb`.`Pessoa_tomou_Vacina`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Pessoa_tomou_Vacina` (
-  `Pessoa_cpf` INT NOT NULL,
+  `Pessoa_cpf` CHAR(11) NOT NULL,
   `Vacina_cod_vacina` VARCHAR(55) NOT NULL,
   `dose` INT NOT NULL COMMENT 'Indica a dose da vacina que está sendo tomada, exemplo: 1, 2, 3. ou seja, primeira, segunda e terceira dose',
   `data` DATE NOT NULL COMMENT 'Data em que a pessoa toumou a dose da vacina',
@@ -77,6 +77,67 @@ SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
+Validação de dados
+
+--function de validação do cpf
+DELIMITER $$
+
+CREATE FUNCTION ValidarCPF(cpf CHAR(11)) RETURNS BOOLEAN
+DETERMINISTIC
+BEGIN
+    DECLARE i INT DEFAULT 1;
+    DECLARE soma1 INT DEFAULT 0;
+    DECLARE soma2 INT DEFAULT 0;
+    DECLARE digito1 INT;
+    DECLARE digito2 INT;
+
+    -- Verificar se o CPF tem apenas números e tamanho correto
+    IF cpf NOT REGEXP '^[0-9]{11}$' THEN
+        RETURN FALSE;
+    END IF;
+
+    -- Verificar se todos os números são iguais (forma otimizada)
+    IF cpf = CONCAT(LEFT(cpf, 1), LEFT(cpf, 1), LEFT(cpf, 1), 
+                    LEFT(cpf, 1), LEFT(cpf, 1), LEFT(cpf, 1), 
+                    LEFT(cpf, 1), LEFT(cpf, 1), LEFT(cpf, 1), 
+                    LEFT(cpf, 1), LEFT(cpf, 1)) THEN
+        RETURN FALSE;
+    END IF;
+
+    -- Calcular primeiro dígito verificador
+    SET soma1 = 0;
+    SET i = 1;
+    WHILE i <= 9 DO
+        SET soma1 = soma1 + CAST(SUBSTRING(cpf, i, 1) AS UNSIGNED) * (11 - i);
+        SET i = i + 1;
+    END WHILE;
+
+    SET digito1 = 11 - (soma1 % 11);
+    SET digito1 = IF(digito1 >= 10, 0, digito1); -- Correção para valores >= 10
+
+    -- Calcular segundo dígito verificador
+    SET soma2 = 0;
+    SET i = 1;
+    WHILE i <= 10 DO
+        SET soma2 = soma2 + CAST(SUBSTRING(cpf, i, 1) AS UNSIGNED) * (12 - i);
+        SET i = i + 1;
+    END WHILE;
+
+    SET digito2 = 11 - (soma2 % 11);
+    SET digito2 = IF(digito2 >= 10, 0, digito2); -- Correção para valores >= 10
+
+    -- Verificar se os dígitos calculados batem com os fornecidos
+    IF digito1 = CAST(SUBSTRING(cpf, 10, 1) AS UNSIGNED) AND
+       digito2 = CAST(SUBSTRING(cpf, 11, 1) AS UNSIGNED) THEN
+        RETURN TRUE;
+    ELSE
+        RETURN FALSE;
+    END IF;
+END $$
+
+DELIMITER ;
+
+
 Inserção de dados
 
 -- Inserindo dados na tabela Pessoa
@@ -96,4 +157,7 @@ INSERT INTO `mydb`.`Pessoa_tomou_Vacina` (`Pessoa_cpf`, `Vacina_cod_vacina`, `do
 VALUES 
 (123456789, 'VAC001', 1, '2024-01-15', 'Goiás', 'Centro', 'Posto Municipal de Saúde'),
 (987654321, 'VAC002', 1, '2024-03-10', 'São Paulo', 'Jardins', 'Clínica Popular');
+
+
+
 
