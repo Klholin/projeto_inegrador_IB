@@ -138,6 +138,36 @@ END $$
 DELIMITER ;
 
 
+Triggers
+
+DELIMITER $$
+
+CREATE TRIGGER VerificarCPFAntesDeInserir
+BEFORE INSERT ON Pessoa
+FOR EACH ROW
+BEGIN
+    IF NOT ValidarCPF(NEW.cpf) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'CPF inválido! Insira um CPF válido.';
+    END IF;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE TRIGGER VerificarCPFAntesDeAtualizar
+BEFORE UPDATE ON Pessoa
+FOR EACH ROW
+BEGIN
+    IF NOT ValidarCPF(NEW.cpf) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'CPF inválido! Insira um CPF válido.';
+    END IF;
+END $$
+
+DELIMITER ;
+
 Inserção de dados
 
 -- Inserindo dados na tabela Pessoa
