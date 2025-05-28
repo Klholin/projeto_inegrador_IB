@@ -193,9 +193,36 @@ INSERT INTO Pessoa (cpf, nome, idade, endereco, telefone, estado_moradia, bairro
 ('84905530687', 'Tiago Barbosa', 26, 'Rua das Palmeiras, 222', '{"celular": "31955555555"}', 'Minas Gerais', 'Savassi');
 
 -- Inserindo dados na tabela Vacina
+INSERT INTO Pessoa_tomou_Vacina (Pessoa_cpf, Vacina_cod_vacina, dose, data, estado_vacina, bairro_vacina, unidade) VALUES
+('12345678909', 'VAC001', 1, '2025-01-10', 'Goiás', 'Centro', 'Unidade de Saúde Central'),
+('98765432100', 'VAC002', 1, '2025-02-20', 'São Paulo', 'Bela Vista', 'Posto Municipal'),
+('98195628648', 'VAC003', 1, '2025-03-15', 'Rio de Janeiro', 'Copacabana', 'Clínica São João'),
+('06000073089', 'VAC004', 1, '2025-04-05', 'Minas Gerais', 'Savassi', 'Hospital Estadual'),
+('71601369859', 'VAC005', 1, '2025-05-25', 'Rio Grande do Sul', 'Centro', 'Unidade Móvel');
 
 
 -- Inserindo dados na tabela Pessoa_tomou_Vacina
+INSERT INTO Pessoa_tomou_Vacina (Pessoa_cpf, Vacina_cod_vacina, dose, data, estado_vacina, bairro_vacina, unidade) VALUES
+('43308775549', 'VAC001', 1, '2025-06-10', 'Bahia', 'Barra', 'Hospital Central'),
+('64301840648', 'VAC002', 1, '2025-07-15', 'Minas Gerais', 'Savassi', 'Posto de Saúde'),
+('86138763076', 'VAC003', 1, '2025-08-01', 'Rio Grande do Sul', 'Centro', 'Clínica São João'),
+('39318515677', 'VAC004', 1, '2025-09-20', 'Minas Gerais', 'Funcionários', 'Hospital Estadual'),
+('18450411602', 'VAC005', 1, '2025-10-05', 'Minas Gerais', 'Centro', 'Unidade de Saúde Central'),
+('26004679631', 'VAC001', 1, '2025-11-12', 'Minas Gerais', 'Savassi', 'Posto Municipal'),
+('63881674896', 'VAC002', 1, '2025-12-18', 'São Paulo', 'Centro', 'Hospital Regional'),
+('57351877750', 'VAC003', 1, '2026-01-05', 'Rio de Janeiro', 'Barra', 'Unidade Móvel'),
+('84905530687', 'VAC004', 1, '2026-02-22', 'Minas Gerais', 'Savassi', 'Hospital Central'),
+('87023682341', 'VAC005', 1, '2026-03-08', 'Ceará', 'Centro', 'Posto de Vacinação'),
+('77036876425', 'VAC001', 1, '2026-04-17', 'Alagoas', 'Centro', 'Hospital Regional'),
+('15215238944', 'VAC002', 1, '2026-05-24', 'Paraná', 'Centro', 'Unidade de Saúde Central'),
+('71601369859', 'VAC003', 1, '2026-06-30', 'São Paulo', 'Jardins', 'Posto Municipal'),
+('06000073089', 'VAC004', 1, '2026-07-11', 'Rio Grande do Sul', 'Centro', 'Clínica São João'),
+('98195628648', 'VAC005', 1, '2026-08-05', 'Minas Gerais', 'Savassi', 'Hospital Estadual'),
+('98765432100', 'VAC001', 2, '2026-09-12', 'São Paulo', 'Bela Vista', 'Posto Municipal'),
+('12345678909', 'VAC002', 2, '2026-10-18', 'Goiás', 'Centro', 'Hospital Regional'),
+('13742084690', 'VAC003', 1, '2026-11-07', 'Minas Gerais', 'Lourdes', 'Unidade Móvel'),
+('75983708775', 'VAC004', 1, '2026-12-22', 'Rio de Janeiro', 'Copacabana', 'Posto de Saúde'),
+('43308775549', 'VAC005', 1, '2027-01-10', 'Bahia', 'Barra', 'Hospital Central');
 
 
 
