@@ -225,6 +225,17 @@ INSERT INTO Pessoa_tomou_Vacina (Pessoa_cpf, Vacina_cod_vacina, dose, data, esta
 ('43308775549', 'VAC005', 1, '2027-01-10', 'Bahia', 'Barra', 'Hospital Central');
 
 
+-- Querys de relacionamento
 
+--Estado x vacinação (contém os 3 estados que mais ocorreram vacinações levando em consideração a repetição de posições)
+SELECT Estado, qtd
+FROM (
+    SELECT estado_moradia AS Estado, COUNT(*) AS qtd,
+           RANK() OVER (ORDER BY COUNT(*) DESC) AS ranking
+    FROM pessoa a
+    JOIN pessoa_tomou_vacina b ON a.cpf = Pessoa_cpf
+    GROUP BY estado_moradia
+) AS ranked
+WHERE ranking <= 3;
 
 
