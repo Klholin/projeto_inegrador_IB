@@ -2,7 +2,6 @@ package com.universidade;
 
 import java.util.Arrays;
 import java.util.Scanner;
-
 import com.universidade.entity.Pessoa;
 import com.universidade.entity.PessoaTomouVacina;
 import com.universidade.entity.Vacina;
@@ -12,12 +11,12 @@ public class App
     public static void main( String[] args )
     {       
         Scanner sc = new Scanner(System.in);
-        System.out.print("Digite o nome da base de dados:");
-        String nomeBanco = sc.nextLine();
-        System.out.print("Digite a senha do banco de dados:");
-        String senha = sc.nextLine();
         System.out.print("Digite o nome do usuário do banco de dados:");
         String usuario = sc.nextLine();
+        System.out.print("Digite a senha do banco de dados:");
+        String senha = sc.nextLine();
+        System.out.print("Digite o nome da base de dados:");
+        String nomeBanco = sc.nextLine();
         ConexaoBanco con = new ConexaoBanco(nomeBanco, senha, usuario);
         if(con.conectar()){    
 
