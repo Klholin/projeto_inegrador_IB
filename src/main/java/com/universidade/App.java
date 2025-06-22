@@ -6,6 +6,7 @@ import com.universidade.entity.Pessoa;
 import com.universidade.entity.PessoaTomouVacina;
 import com.universidade.entity.Vacina;
 
+//Minha aplicação Java para gerenciar um banco de dados de vacinação
 public class App 
 {
     public static void main( String[] args )
